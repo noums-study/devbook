@@ -2,7 +2,7 @@
 
 <br/>
 
-<p align='center'> <img src="CleanCode.png" width="200" height="250"> </p>
+<p align='center'> <img src="cleancode.png" width="200" height="250"> </p>
 
 <br/>
 <br/>
