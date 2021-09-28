@@ -1,1 +1,1 @@
-[노션링크](https://loving-pumpkin-7d4.notion.site/1-chapter-1-3-887eb26d82464b6286799db625542d31)
+[노션링크](https://loving-pumpkin-7d4.notion.site/1-3-b0972421d78f4f6183418f1f60fbb801)
