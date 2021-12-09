@@ -260,3 +260,22 @@ public static List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p
 - predicate란?
     
     수학에서는 인수로 값을 받아 boolean값으로 반환하는 함수를 프리디케이트라고 한다. 위의 코드에서는 Apple::isGreenApple 메서드를 filterApples 인수로 넘겨주었음.
+
+    <br/>
+   <br/>
+
+### 메서드 전달에서 람다로
+
+```bash
+filterApples(inventory,(Apple a) -> "green".equals(a.getColor()));
+filterApples(inventory,(Apple a) -> a.getWeight() > 150 );
+filterApples(inventory,(Apple a) -> a.getWeight() < 80 || "red".equals(a.getColor()));
+```
+
+isGreenApples 와 같이 한번만 사용할 메서드는 굳이 안만드는것이 좋다. 
+
+위와 같이 넘겨주려는 코드를 애써 찾을 필요가 없이 람다식으로 바로 코드를 넘겨준다. 
+
+**But 람다식이 몇줄 이상으로 길어진다면,** 이름을 가진 메서드를 명시하고 사용하는것이 좋다. 
+
+**코드의 명확성이 우선시 되어야 한다.!!**
