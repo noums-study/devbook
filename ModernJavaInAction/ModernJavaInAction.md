@@ -13,8 +13,8 @@ by 우르마, 마리오 푸스코, 앨런 마이크로프트
 <br>
 
 PART1 기초
-- [CHAPTER_1) 자바 8,9,10,11 : 무슨 일이 일어나고 있는가?](2021-10-03/ssyoni.md)
-- CHAPTER_2) 동작 파라미터화 코드 전달하기 
+- [CHAPTER_1) 자바 8,9,10,11 : 무슨 일이 일어나고 있는가?](chapter1/ssyoni.md)
+- [CHAPTER_2) 동작 파라미터화 코드 전달하기](chapter2/ssyoni.md)
 - CHAPTER_3) 람다 표현식 
   
 PART2 함수형 데이터처리
