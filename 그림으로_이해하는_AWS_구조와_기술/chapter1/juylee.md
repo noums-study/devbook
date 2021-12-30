@@ -64,7 +64,7 @@ AWS 12개월 무료 체험 서비스: https://aws.amazon.com/ko/free
 매니지드 서비스는 백업 및 업데이트가 자동으로 이루어진다.
 </br></br>
 ## 1.5 AWS의 도입 사례: 대기업이나 정부기관에서 도입하는 경우도 다수
-AWS 한국 사례: https://aws.amazon.com/ko/blogs/korea/now-available-aws-korean-customer-cases/</br>
+AWS 한국 사례: https://aws.amazon.com/ko/blogs/korea/now-available-aws-korean-customer-cases/
 </br></br>
 ## 1.6 AWS 도입 방법: 계정을 만들고 로그인하면 된다
 AWS의 변화를 발표하는 AWS re:Invent: https://reinvent.awsevents.com/
