@@ -9,7 +9,6 @@
 ### 메서드 추출
 > 어떤 코드를 그룹으로 묶어도 되겠다고 판단될 땐 그 코드를 빼내어 목적을 잘 나타내는 직관적 이름의 메서드로 만들자.
 
-- 예제
 ```java
 
 // 기본 메서드
@@ -30,7 +29,6 @@ void printOwing(double previousAmount) {
 	System.out.println("고객명 : " + _name);
 	System.out.println("외상액 : " + outstanding);
 }
-
 
 // 메서드 추출 사용
 void printOwing(double previousAmount) {
@@ -188,7 +186,7 @@ double multiply = _height * _width;
 System.out.println(multiply);
 ```
 ### 매개변수로의 값 대입 제거
-> 매개변수로 값을 대입하는 코드가 있을 땐 매새변수 대신 임시변수를 사용하게 수정하자.
+> 매개변수로 값을 대입하는 코드가 있을 땐 매개변수 대신 임시변수를 사용하게 수정하자.
 
 
 ### 메서드를 메서드 객체로 전환
