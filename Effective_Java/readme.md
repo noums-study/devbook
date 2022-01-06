@@ -1,6 +1,9 @@
 # 이펙티브 자바 Effective Java 3/E
 by 조슈아 블로크
 
+백기선님 유튜브 강의: http://bit.ly/2Lu4BGi
+github: https://github.com/WegraLee/effective-java-3e-source-code
+
 <br/>
 <br/>
 <br/>
