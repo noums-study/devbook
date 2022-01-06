@@ -14,3 +14,4 @@
 - [모던 자바 인 액션](/ModernJavaInAction/ModernJavaInAction.md) - by 게이브리얼 우르마, 마리오 푸스코, 앨런 마이크로프트
 - [그림으로 이해하는 AWS 구조와 기술](/그림으로_이해하는_AWS_구조와_기술/readme.md) - by 오가사와라 시게타카
 - [리팩토링 1판](/Refactoring/readme.md) - by 마틴 파울러
+- [이펙티브 자바](/Effective_Java/readme.md) - by 조슈아 블로크
