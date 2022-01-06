@@ -2,6 +2,7 @@
 by 조슈아 블로크
 
 백기선님 유튜브 강의: http://bit.ly/2Lu4BGi
+</br>
 github: https://github.com/WegraLee/effective-java-3e-source-code
 
 <br/>
