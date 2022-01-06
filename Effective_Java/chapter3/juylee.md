@@ -25,3 +25,16 @@
 * 일관성(consistency): null이 아닌 모든 참조 값 x, y에 대해 x.equals(y)는 항상 true거나 false이다.
 * null 아님: null이 아닌 모든 참조 값 x에 대해 x.equals(null) = false이다.
 </br>
+
+<i>양질의 equals 메서드 구현 방법</i>
+</br>
+* == 연산자를 사용해 입력이 자기 자신의 참조인지 확인한다.
+* instanceof 연산자로 입력이 올바른 타입인지 확인한다.
+* 입력을 올바른 타입로 형변환한다.
+* 입력 객체와 자기 자신의 대응되는 '핵심' 필드들이 모두 일치하는지 하나씩 검사한다.
+</br>
+
+* float, double의 경우는 특수한 부동소수 값등을 다뤄야하지 때문에 compare()를 사용하는게 좋다.
+* null을 정상 취급해서 사용하는 참조 타입 필드의 경우 Object.equals(Object, Object)를 사용해서 NullPointException 발생을 방지하는 것이 좋다
+* equals를 재정의할 때 hashCode도 반드시 재정의하자.
+* AutoValue: 구글에서 만든 프레임워크로 어노테이션 추가만 하면 equals를 작성하고 테스트하는 작업을 하지 않아도 된다.
