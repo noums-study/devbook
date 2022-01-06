@@ -130,3 +130,52 @@
 </br></br>
 
 ## 자원을 직접 명시하지 말고 의존 객체 주입을 사용하라
+사용하는 자원(필드 등)이 동작에 따라 달라지는 클래스에는 정적 유틸리티 클래스나 싱글톤 방식이 적합하지 않다.</br>
+-> 이럴 때 정적 유틸리티 클래스나 싱글톤 방식이 아닌 의존 객체 주입을 통해서 사용하는 자원을 생성자로 주입 받아서 사용한다.
+</br></br>
+
+## 불필요한 객체 생성을 피하라
+String.matches는 정규표현식으로 문자열 형태를 확인하는 가장 쉬운 방법이지만, 성능이 중요한 상황에서 반복해 사용하기엔 적합하지 않다.</br>
+
+```
+static boolean isRomanNumberal(String s) {
+  // matches()의 매개변수인 Pattern가 호출될 때마다 생성된다
+  // Pattern은 인스턴스 생성 비용이 높다
+  return s.matches("^(?=.)M*C[MD]|D?C{0,3})(X[CL]|L?X{0,3}){I[XV]|V?I{0,3})$");
+}
+```
+* 오토박싱(auto boxing): 기본 타입이 래퍼 클래스로 자동 변환 되는 것
+박싱된 기본 타입보다는 기본 타입을 사용하고, 의도치 않은 오토박싱이 숨어들지 않도록 주의하자.</br>
+단순 객체 생성을 피하려고 객체 풀(pool)을 사용하는 것은 메모리 사용량을 늘리고 성능을 떨어뜨린다.
+</br></br>
+
+## 다 쓴 객체 참조를 해제하라
+다 쓴 참조를 null 처리하면 다 쓴 참조를 해제할 수 있다.</br>
+허자먼 객체 참조를 null 처리하는 일은 예외적인 경우여야 한다.</br>
+다 쓴 참조를 해제하는 가장 좋은 방법은 변수의 범위를 최소가 되게 정의해서 그 참조를 담은 별수를 유효 범위(scope) 밖으로 밀어내는 것이다.</br>
+자기 메모리를 직접 관리하는 클래스라면 프로그래머는 항시 메모리 누수에 주의해야 한다.
+</br></br>
+
+## finalizer와 cleaner 사용을 피하라
+객체 소멸자인 finailzer는 예측할 수 없고, 상황에 따라 위험할 수 있어 일반적으로 불필요 하다.</br>
+cleaner는 finalizer보다는 덜 위험하지만, 여전히 예측할 수 없고, 느리고, 일반적으로 불필요하다.</br>
+finalizer, cleaner는 실행되기까지 얼마나 걸릴지 알 수 없어 제때 실행되어야 하는 작업은 절대 할 수 없다.</br>
+데이터베이스 같은 공유 자원의 영구 락(lock) 해제와 같은 상태를 영구적으로 수정하는 작업에서는 finalizer나 cleaner에 의존해서는 안 된다.</br>
+finalizer를 사용한 클래스는 finalizer 공격에 노출되어 심각한 보안 문제를 일으킬 수 있다.
+</br></br>
+
+## try-finally보다는 try-with-resources를 사용하라
+try-with-resources 구조를 사용하려면 해당 자원이 AutoCloseable 인터페이스를 구현해야 한다.</br>
+
+```
+static void copy(String src, String dst) throws IOException {
+  try (InputStream in = new FileInputStream(src);
+        OutputStream out = new OutputStream(dst)) {
+        byte[] buf = new byte[BUFFER_SIZE];
+        int n;
+        while ((n = in.read(buf)) >= 0 )
+          out.write(buf, 0, n);
+       }
+}
+```
+</br></br></br></br>
