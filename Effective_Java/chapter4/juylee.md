@@ -99,3 +99,46 @@ public class ForwardingSet<E> implements Set<E> {
   -> getProperty(key)는 Properties의 동작이나 get(key)는 Properties의 상위 클래스인 Hashtable로부터 물려받은 동작이므로 문제가 있을 수 있다.
 </br></br>
 
+## 상속을 고려해 설계하고 문서화하라. 그러지 않았다면 상속을 금지하라
+상속용 클래스는 재정의할 수 있는 메서드들을 내부적으로 어떻게 이용하는지 문서로 남겨야 한다.</br>
+보통 javaDoc에 @implSepc에 메서드의 내부 동작 방식을 설명한다.</br>
+
+```
+    /**
+     *
+     * @param x
+     * @param y
+     * @implSpec // 여기에 서술
+     */
+    public void test(int x, int y) {
+```
+
+클래스의 내부 동작과정 중간에 끼어들 수 있는 훅(hook)(동작 과정에 호출되는 다른 내부 메서드)을 잘 선별하여 protected 메서드 형태로 공개해야 할 수도 있다.</br>
+상속용 클래스를 시험하는 방법은 직접 하위 클래스를 만들어보는 것이 '유일'하다.</br>
+상속용으로 설계한 클래스는 배포 전에 반드시 하위 클래스를 만들어 검증해야 한다.</br>
+상속용 클래스의 생성자는 직접적으로든 간접적으로든 재정의 가능 메서드를 호출해서는 안 된다.</br>
+-> 상위 클래스 생성자에서 쓴 메서드를 하위 클래스에서 재정의 해 하위 클래스의 생성자에서 초기화하는 값을 다룬다면 상위 클래스의 생성자가 먼저 호출되므로 의도하지 않는 대로 동작할 가능성이 있다.</br>
+
+```
+public final class Sub extends Super {
+  // 생성자에서 초기화한다.
+  private final Instant instant;
+  
+  Sub() {
+    instant = Instant.now();
+  }
+  
+  // 총 두 번 호출되는데
+  // 1. 상위 클래스의 생성자를 호출하므로 null 출력(상위 클래스에서는 instant를 초기화 하지 않으므로)
+  // 2. 상위 클래스 생성자 호출 후 하위 클래스의 생성자가 호출되서 instant가 출력됨
+  @Override
+  public void overrideMe() {
+    System.out.printlnt(instant); 
+  }
+  
+  public static void main(String[] args) {
+     Sub sub = new Sub();
+     sub.overrideMe();
+  }
+}
+```
