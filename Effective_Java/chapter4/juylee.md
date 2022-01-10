@@ -142,3 +142,89 @@ public final class Sub extends Super {
   }
 }
 ```
+
+clone과 readObject 모두 직접적으로든 간접적으로든 재정의 가능 메서드를 호출해서는 안 된다.</br>
+Serializable을 구현한 상속용 클래스가 readResolve나 writeReplace 메서드를 갖는다면, private으로 선언 히 하위 클래스에서 무시되기 때문에 protected로 선언해야 한다.
+</br></br>
+
+## 추상 클래스보다는 인터페이스를 우선하라
+인터페이스는 믹스인(mixin) 정의에 안성맞춤이다.</br>
+인터페이스는 계층구조가 없는 타입 프레임워크를 만들 수 있다.</br>
+인터페이스는 기능을 향상 시키는 안전하고 강력한 수단이 된다.</br>
+equals, hashCode와 같은 메서드들을 디폴트 메서드로 제공해서는 안 되며 인스턴스 필드를 가질 수 없고 public이 아닌 정적 멤버도 가질 수 없다.</br>
+복잡한 인터페이스라면 구현하는 수고를 덜어주는 골격 구현을 함께 제공하는 방법이 좋다.</br>
+골격 구현은 가능한 한 인터페이스에 디폴트 메서드로 구현해 제공하고 인터페이스의 구현상의 제약 때문에 디폴트 메소드로 구현이 불가한 경우에는 인터페이스를 구현한 추상 클래스로 제공한다.
+</br></br>
+
+## 인터페이스는 구현하는 쪽을 생각해 설계하라
+디폴트 메서드는 컴파일에 성공하더라도 기존 구현체에 런타임 오류를 일으킬 수 있다.
+</br></br>
+
+## 인터페이스는 타입을 정의하는 용도로만 사용하라
+상수 인터페이스 안티패턴은 인터페이스를 잘못 사용한 예다.</br>
+
+```
+public interface PhysicalConstants {
+  static final double AVOGADROS_NUMBER = 6.022140857e23;
+  
+  static final double BOLTZMANN_CONSTANT = 1.38064852e-23;
+  
+  static final double ELECTRON_MASS = 9.10938356e-31;
+}
+```
+</br></br>
+
+## 태그 달린 클래스보다는 클래스 계층구조를 활용하라
+```
+class Figure {
+  enum Shape { RECTANGLE, CIRCLE };
+  
+  // 태그 필드
+  final Shape shape;
+  
+  // CIRCLE(원)일 때만 쓰이고 RECTANGLE(사각형)일 때는 사용되지 않는다.
+  double radius;
+  
+  ...
+  
+  // CIRCLE(원)일 때만 쓰이는 생성자
+  Figure(double radius) {
+    shape = SHAPE.CIRCLE;
+    this.radius = radius;
+  }
+  
+  ...
+  
+  double area() {
+    switch(shape) {
+      case RECTANGLE:
+        return length * width;
+    ...
+  }
+  ...
+}
+```
+
+root가 될 추상 클래스를 정의하고 태그 값에 따라 동작이 달라지는 메서드들을 루트 클래스의 추상 메서드로 선언해서 계층 태그 대신 계층 구조를 활용한다.
+</br></br>
+
+## 멤버 클래스는 되도록 static으로 만들라
+정규화된 this: 겉클래스.this로 비정적 멤버 클래스(innerClass)에서 겉 클래스의 인스턴스나 메서드를 호출 할 수 있다.</br>
+
+```
+public class OutClass {
+  final String str = "This is the test!";
+  
+  // public이든 private이든 static만 안 붙으면 됨(비정적 멤버 클래스)
+  class InClass {
+    public void test() {
+      System.out.println(OutClass.this.str);
+    }
+  }
+}
+```
+멤버 클래스(innerClass)에서 바깥 인스턴스(겉 클래스의 인스턴스)에 접근할 일이 없다면 무조건 static을 붙여서 정적 멤버 클래스로 만들자.
+</br></br>
+
+## 톱레벨 클래스는 한 파일에 하나만 담으라
+</br></br></br></br>
