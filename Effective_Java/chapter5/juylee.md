@@ -191,3 +191,30 @@ static <T> List<T> pickTwo(T a, T b, T c) {
 }
 ```
 </br></br>
+
+## 타입 안전 이종 컨테이너를 고려하라
+매개변수화 되는 대상은 컨테이너 자신이다.(예. `Set<E>`에서 매개변수화 되는 것은 E가 아니라 `Set<E>`이다.)</br>
+
+* 타입 안전 이종 컨테이너(type safe heterogeneous container pattern): 컨테이너에 값을 넣거나 뺄 때 매개변수화한 키를 제공해 유연함을 제공해준다.</br>
+
+```
+// 키가 어노테이션 타입인 타입 안전 이종 컨테이너
+public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {...}
+```
+
+* 타입 토큰(type token): 메서드들이 주고 받는 class 리터럴(예. `Class<T>`)
+
+```
+// asSubclass를 사용해 한정적 타입 토큰을 안전하게 형변환할 수 있다.
+static Annotation getAnnotation(AnnotatedElement element, String annotationTypeName) {
+  Class<?> annotationType = null; // 비한정적 타입 토큰
+  try {
+    annotationType = Class.forName(annotationTypeName);
+  } catch (Exception e) {
+    throw new IllegalArgumentException(e);
+  }
+  
+  return element.getAnnotation(annotationType.asSubclass(Annotation.class));
+}
+```
+</br></br></br></br>
