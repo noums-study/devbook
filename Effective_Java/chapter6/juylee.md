@@ -10,3 +10,87 @@ public static final int APPLE_PIPPIN = 1;
 열거 타입 자체는 클래스이며 상수 하나당 자신의 인스턴스를 하나씩 만들어 public static final 필드로 공개하는 싱글톤 형태다.</br>
 열거 타입은 근본적으로 불변이라 열거 인스턴스 필드는 모두 public final이거나 private인 것이 좋다.</br>
 특정 클래스에서만 쓰이는 열거 타입은 해당 클래스의 멤버 클래스로 만든다.</br>
+
+* 상수별 메서드 구현(constant-specific method implementation): 추상 메서드를 선언하고 각 상수별 클래스 몸체(constant-specific class body), 즉 각 상수에서 자신에 맞게 재정의하는 것
+
+```
+public enum Operation {
+  PLUS {
+    public double apply(double x, double y) {
+      return x + y;
+    }
+  },
+  MINUS {
+    public double apply(double x, double y) {
+      return x - y;
+    }
+  },
+  TIMES {
+    public double apply(double x, double y) {
+      return x * y;
+    }
+  }
+  ,
+  DIVIDE {
+    public double apply(double x, double y) {
+      return x / y;
+    }
+  }
+  
+  public abstract double apply(double x, double y);
+}
+```
+
+switch 문은 열거 타입의 상수별 동작을 구현하는데 적합하지 않지만 기존 열거 타입에 또다른 기존 상수별 동작을 혼합해 넣을 때는 switch 문이 좋은 선택이 될 수 있다.</br>
+
+```
+public static Operation inverse(Operation op) {
+  switch(op) {
+    case PLUS: return Operation.MINUS;
+    case MINUS: return Operation.PLUS;
+    case TIMES: return Operation.DIVIDE;
+    case DIVIDE: return Operation.TIMES;
+  }
+}
+```
+
+필요한 원소를 컴파일타임에 알 수 있는 상수 집합이라면 항상 열거 타입을 사용하자.</br>
+열거 타입에 정의된 상수 개수가 영원히 고정 불변일 필요는 없구 추후에 상수가 추가되도 바어닐 수준에서 호환되도록 열거타입이 설계되어 있다.
+</br></br>
+
+## oridinal 메서드 대신 인스턴스 필드를 사용히라
+열거 타입 순서가 바뀔 수도 있으며 중간에 값이 비울 수도 없는 등 제약 사항이 있으니 열거 타입 상수에 해당하는 숫자 값을 사용하고 싶으면 oridinal 메서드로 얻어서 사용하지 말고 인스턴스 필드에 저장해 상수 별 값을 명시 하는 것이 좋다.</br>
+oridinal 함수 설명에도 프래그래머들이 이 메서드를 쓸 일이 없으며 oridinal은 EnumSet과 EnumMap 같이 열거 타입 기반의 범용 자료구조에 쓰일 목적으로 설계되었다고 쓰여 있다.
+</br></br>
+
+## 비트 필드 대신 EnumSet을 사용하라
+list, set보다 빠르다는 장점 때문에 비트 필드를 사용하는 경우가 있곤 한다.</br>
+
+```
+public class Text {
+  public static final int STYLE_BOLD = 1 << 0; // 1
+  public static final int STYLE_ITALIC = 1 << 1; // 2
+  public static final int STYLE_UNDERLINE = 1 << 2; // 4
+  public static final int STYLE_STRIKETHROUGH = 1 << 3; // 8
+  
+  // 매개변수 styles는 0개 이상의 STYLE_ 상수를 비트별 OR한 값이다.
+  public void applySyles(int styles) {...}
+```
+
+```
+text.applyStyles(STYLE_BOLD | STYLE_ITALIC);
+```
+
+하지만 이러한 비트 필드는 그 값이 무엇을 의미하는지 해석하기 위한 비트 연산이 필요하므로 이를 비트 필드보다는 열거형으로 나타내고 EnumSet을 이용하는 것이 좋다.</br>
+EnumSet은 내부적으로 비트 벡터를 사용해서 비트 필드를 사용하는 것과 같은 효과를 볼 수 있다.</br>
+
+```
+public class Text {
+  public enum Style { BOLD, ITALIC, UNDERLINE, STRIKETHROUCH }
+  
+  // 어떤 Set을 넘겨도 되나, EnumSet이 가장 좋다.
+  public void applyStyles(Set<Style> styles) {...}
+```
+</br></br>
+
+## oridinal 인덱싱 대신 EnumMap을 사용하라
