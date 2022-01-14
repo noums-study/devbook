@@ -94,3 +94,47 @@ public class Text {
 </br></br>
 
 ## oridinal 인덱싱 대신 EnumMap을 사용하라
+oridinal은 상수를 추가하거나 제거할 시 바뀌므로 인덱싱으로 사용하기에는 값을 보장할 수 없다.</br>
+EnumMap은 Enum에 특화된 Map으로 HashMap보다 빠르며 key인 Enum 순서대로 정렬된 컬렉션이며 내부적으로 배열로 동작한다.</br>
+
+```
+// LifeCycle에 따라서 Plant을 그룹화 짓는 것
+
+// oridinal 인덱싱
+for(Plant p: garden) {
+  plantsByLifeCycle[p.lifeCycle.oridinal()].add(p);
+}
+
+
+// EnumMap 사용
+Array.stream(garden).collect(groupingBy(p -> p.lifeCycle, () -> new EnumMap<>(LifeCycle.class), toSet())));
+```
+</br></br>
+
+## 확장할 수 있는 열거 타입이 필요하면 인터페이스를 사용하라
+열거 타입 자체는 확장할 수 없지만, 인터페이스와 그 인터페이스를 구현하는 기본 열거 타입을 함께 사용해 같은 효과를 낼 수 있다.</br>
+
+```
+public interface Operation {
+  double apply(double x, double y);
+}
+
+public enum BasicOperation implements Operation {
+  PLUS("+") {
+    public double apply(double x, double y) { return x + y; }
+  ...
+  
+  private final String symbol;
+
+  BasicOperation(String symbol) {
+    this.symbol = symbol;
+  }
+
+  @Override
+  public String toString() {
+    return symbol;
+  }
+}
+```
+</br></br>
+
