@@ -55,12 +55,12 @@ public static Operation inverse(Operation op) {
 ```
 
 필요한 원소를 컴파일타임에 알 수 있는 상수 집합이라면 항상 열거 타입을 사용하자.</br>
-열거 타입에 정의된 상수 개수가 영원히 고정 불변일 필요는 없구 추후에 상수가 추가되도 바어닐 수준에서 호환되도록 열거타입이 설계되어 있다.
+열거 타입에 정의된 상수 개수가 영원히 고정 불변일 필요는 없구 추후에 상수가 추가되도 바어닐 수준에서 호환되도록 열거타입이 설계되어 있다.</br>
 </br></br>
 
 ## oridinal 메서드 대신 인스턴스 필드를 사용히라
 열거 타입 순서가 바뀔 수도 있으며 중간에 값이 비울 수도 없는 등 제약 사항이 있으니 열거 타입 상수에 해당하는 숫자 값을 사용하고 싶으면 oridinal 메서드로 얻어서 사용하지 말고 인스턴스 필드에 저장해 상수 별 값을 명시 하는 것이 좋다.</br>
-oridinal 함수 설명에도 프래그래머들이 이 메서드를 쓸 일이 없으며 oridinal은 EnumSet과 EnumMap 같이 열거 타입 기반의 범용 자료구조에 쓰일 목적으로 설계되었다고 쓰여 있다.
+oridinal 함수 설명에도 프래그래머들이 이 메서드를 쓸 일이 없으며 oridinal은 EnumSet과 EnumMap 같이 열거 타입 기반의 범용 자료구조에 쓰일 목적으로 설계되었다고 쓰여 있다.</br>
 </br></br>
 
 ## 비트 필드 대신 EnumSet을 사용하라
@@ -153,6 +153,8 @@ public enum BasicOperation implements Operation {
   단, @Repeatable 메타어노테이션을 갖는 어노테이션의 매개변수를 배열로 반환해줄 컨테이너 어노테이션을 별도 정의해줘야한다.</br>
   
   ```
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
   @Repeatable(value = ExceptionTestContainer.class)
   public @interface ExceptionTest {
     Class<? extends Throwable> value();
@@ -164,4 +166,33 @@ public enum BasicOperation implements Operation {
     Class<? extedns Trowable>[] value(); // 여러 번 같은 곳에 달린 ExceptionTest의 value를 묶어줌
   }
   ```
-  Method.isAnnotationPresent로 @ExceptionTest가 달렸는지 
+  Method.isAnnotationPresent로 @ExceptionTest가 달렸는지 확인해보면 @ExceptionTest가 한 곳에 여러 개 달린 것은 컨테이너인 @ExceptionTestContainer가 달렸다고 판단해 @ExceptionTest가 달려있지 않다고 판단한다.</br>
+  반대로 @ExceptionContainer가 달렸는지 확인하면 @ExceptionTest가 하나 달린 것은 컨테이너로 묶이지 않았으니 @ExceptionTest로 판단해 false를 반환한다.</br>
+  따라서 @Repeatable을 사용할 경우에는 원래 어노테이션(@ExceptionTest)와 컨테이너 어노테이션(@ExceptionTestContainer) 둘 다 달려 있는지 확인해야 한다.</br>
+</br></br>
+
+## @Override 어노테이션을 일관되게 사용하라
+상위 클래스의 메서드를 재정의하려는 모든 메서드에 @Override 어노테이션을 달 경우 잘못해서 재정의가 아니라 다중정의(overloading)한 것을 컴파일러가 찾아서 알려준다.</br>
+</br></br>
+
+## 정의하려는 것이 타입이라면 마커 인터페이스를 사용하라
+마커 인터페이스(marker interface)란 아무 메서드도 담고 있지 않고, 단지 자신을 구현하는 클래스가 특정 속성을 가짐을 표시해주는 인터페이스를 말한다.</br>
+
+```
+// 마커 인터페이스 예
+public interface Serializable {
+}
+```
+
+<i>마커 인터페이스가 마커 어노테이션보다 좋은 점</i>
+</br>
+* 마커 인터페이스는 이를 구현한 클래스의 인스턴스들을 구분하는 타입으로 쓸 수 있으나, 마커 어노테이션은 그렇지 않다.</br>
+  마커 인터페이스는 타입이므로 마커 어노테이션과 다르게 컴파일타임 때 에러를 발견할 수 있다.</br>
+* 마커 인터페이스는 적용 대상을 더 정밀하게 지정할 수 있다.</br>
+  -> 마커 인터페이스는 인터페이스를 구현한 클래스로 적용 대상을 지정가능하므로</br>
+</br>
+
+반대로 마커 어노테이션은 어노데이션 시스템의 지우너을 받는다는 점에서 마커 인터페이스보다 낫다.</br>
+또한 클래스와 인터페이스 외의 필드, 지역변수 등과 같은 프로그램 요소에 마킹해야할 때는 마킹 어노테이션을 쓸 수밖에 없다.</br>
+적용 대상이 ElementType.TYPE인 마커 어노테이션을 작성하고 있다면, 정말 어노테이션으로 구현하는게 나은지 혹은 마커 인터페이스가 낫지는 않은지 고민해봐야 한다.
+</br></br></br></br>
