@@ -107,3 +107,21 @@ static int min(int firstArg, int... remainingArgs) {
 </br></br>
 
 ## null이 아닌, 빈 컬렉션이나 배열을 반환하라
+아래와 같이 빈 컬렉션이 아닌 null을 넘기는 것은 함수를 호출하는 곳에서 별도 null처리를 해야해서 좋은 코드가 아니다.
+
+```
+private final List<Cheese> cheesesInStock = ...;
+
+public List<Cheese> getCheeses() {
+  return cheesesInStock.isEmpty() ? null : new ArrayList<>(cheesesInStock);
+}
+```
+</br></br>
+
+## 옵셔널 반환은 신중히 하라
+컬렉션, 스트림, 배열, 옵셔널 같은 컨테이너 타입은 옵셔널로 감싸지 말고 빈 컨테이너를 반환하는 것이 클라이언트 쪽에서 옵셔널 처리해야하는 것을 줄여주므로 좋다.</br>
+결과가 없을 수 있으며, 클라이언트가 이 상황을 특별하게 처리해야 한다면 Optional<T>를 반환한다.</br>
+기본 타입의 경우 OptionalInt, OptionalLong, OptionalDouble을 사용해서 박싱된 기본 타입을 담은 옵셔널을 반환하는 일이 없도록 해야 한다.</br>
+</br></br>
+
+## 공개된 API 요소에는 항상 문서화 주석을 작성하라
