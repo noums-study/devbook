@@ -113,6 +113,7 @@ Array.stream(garden).collect(groupingBy(p -> p.lifeCycle, () -> new EnumMap<>(Li
 
 ## 확장할 수 있는 열거 타입이 필요하면 인터페이스를 사용하라
 열거 타입 자체는 확장할 수 없지만, 인터페이스와 그 인터페이스를 구현하는 기본 열거 타입을 함께 사용해 같은 효과를 낼 수 있다.</br>
+그러나 열거 타입은 기본적으로 확장하지 않는 상수 타입을 사용하기 위한 클래스로 되도록이면 확장을 염두해두고 사용하지 않는다.</br>
 
 ```
 public interface Operation {
@@ -138,3 +139,29 @@ public enum BasicOperation implements Operation {
 ```
 </br></br>
 
+## 명명 패턴보다는 어노테이션을 사용하라
+예를 들어 JUnit 3에서는 메서드 이름을 'test'로 시작하게 명명 해놓으면 컴파일러가 해당 메서드는 테스트 메서드라는 것을 인지하고 JUnit이 테스트를 수행했다.</br>
+이와 같은 기능적인 명명은 오타가 났을 경우 원하는대로 기능하지 않으며 함수 이름이 쓸데없이 길어지고 알아보기 어렵게 만든다.</br>
+따라서 기능을 위해서는 명명 패턴보다는 어노테이션을 사용하는 것이 좋다.</br>
+</br>
+
+* 메타어노테이션(meta-annotation): @Retention, @Target과 같이 어노테이션 선언에 다는 어노테이션
+* 마커 어노테이션(marker, annotation): 아무 매개변수 없이 단순 대상에 마킹(marking)하는 어노테이션
+
+* @Repeatable</br>
+  같은 어노테이션을 한 곳에 여러 개 달 수 있게 허용하는 메타어노테이션</br>
+  단, @Repeatable 메타어노테이션을 갖는 어노테이션의 매개변수를 배열로 반환해줄 컨테이너 어노테이션을 별도 정의해줘야한다.</br>
+  
+  ```
+  @Repeatable(value = ExceptionTestContainer.class)
+  public @interface ExceptionTest {
+    Class<? extends Throwable> value();
+  }
+  
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.METHOD)
+  public @interface ExceptionTestContainer {
+    Class<? extedns Trowable>[] value(); // 여러 번 같은 곳에 달린 ExceptionTest의 value를 묶어줌
+  }
+  ```
+  Method.isAnnotationPresent로 @ExceptionTest가 달렸는지 
