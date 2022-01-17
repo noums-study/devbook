@@ -119,3 +119,39 @@ try (Stream<String> words = new Scanner(file).tokens()) {
 </br></br>
 
 ## 반환 타입으로는 스트림보다는 컬렉션이 낫다
+```
+// Stream <-> Iterable 어댑터
+// Stream<E> -> Iterable<E>
+public static <E> Iterable<E> iterableOf(Stream<E> stream) {
+  return stream::iterator;
+}
+
+// Iterable<E> -> Stream<E>
+public static <E> Stream<E> streamOf(Iterable<E> iterable) {
+  return StreamSupport.stream(iterable.spliterator(), false);
+}
+```
+
+어댑터 코드를 사용하면 구현하고자 하는 상황에 맞게 Stream, Iterator를 변환해 사용할 수 있지만 코드를 어수선하게 만들고 성능도 좋아지지 않는다.</br>
+Collection은 Iterable의 하위 타입이고 stream 메서드도 제공하므로 원소 시퀀스를 반환하는 공개 API의 반환 타입에는 Collection이나 그 하위 타입을 쓰는게 좋다.</br>
+하지만 덩치 큰 시퀀스 또한 쓸데없이 컬렉션으로 반환해 메모리를 낭비해서는 안된다.</br>
+</br></br>
+
+## 스트림 병렬화는 주의해서 적용하라
+데이터 소스가 Stream.iterate거나 중간 연산으로 limit를 쓰면 파이프라인 병렬화로는 성능 개선을 기대할 수 없다.</br>
+대체로 스트림의 소삭 ArrayList, HashMap, HashSet, ConcurrentHashMap의 인스턴스거나 배열, int 범위, long 범위일 때 병렬화의 효과가 가장 좋다.</br>
+
+```
+// 병렬화에 적합한 예
+static long pi(long n) {
+  return LongStream.rangeClosed(2, n)
+                  .parallel()
+                  .mapToObj(BigInteger::valueOf)
+                  .filter(i -> i.isProbablePrime(50))
+                  .count();
+}
+```
+
+스트림 병렬화는 계산도 올바르게 수행하고 성능이 빠라질 거라는 확신이 있을 때 운영 환경과 유사한 환경에서 테스트해보고 반영하는 것이 좋다.</br>
+그렇지 않을 경우 오작동하거나 오히려 프로그램의 성능을 급격히 떨어뜨릴 수 있다.</br>
+</br></br></br></br>
