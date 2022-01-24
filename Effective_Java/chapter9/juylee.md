@@ -75,3 +75,24 @@ API를 설계할 때 성능에 주는 영향을 고려하라.</br>
 </br></br>
 
 ## 일반적으로 통용되는 명명 규칙을 따르라
+<i>타입 매개변수 명명 규칙</i>
+</br>
+
+* T: 임의의 타입
+* E: 원소의 타입
+* K, V: 키, 값
+* X: 예외
+* R: 메서드 반환 타입
+* T, U, V: 임의 타입 및 임의 시퀀스
+</br>
+
+<i>몇 가지 명명 규칙</i>
+</br>
+
+* 다른 타입의 또 다른 객체를 반환하는 인스턴스 메서드의 이름은 보통 toType(toArray) 형태로 짓는다.
+* 객체의 내용을 다른 뷰로 보여주는 메서드의 이름은 asType(asList)의 형태로 짓는다.
+* 객체의 값을 기본 타입 값으로 반환하는 메서드의 이름은 보통 typeValue(intValue) 형태로 짓는다.
+* 정적 팩터리의 이름은 보통 from, of, valueOf, instance, getInstance, newInstance, getType, newType을 흔히 사용한다.
+</br>
+
+</br></br></br></br>
