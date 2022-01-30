@@ -13,11 +13,13 @@ by 우르마, 마리오 푸스코, 앨런 마이크로프트
 <br>
 
 PART1 기초
-- [CHAPTER_1) 자바 8,9,10,11 : 무슨 일이 일어나고 있는가?](chapter1/ssyoni.md)
-- [CHAPTER_2) 동작 파라미터화 코드 전달하기](chapter2/ssyoni.md)
-- CHAPTER_3) 람다 표현식 
+- [CHAPTER_1) 자바 8,9,10,11 : 무슨 일이 일어나고 있는가?](chapter1/chapter_1.md)
+- [CHAPTER_2) 동작 파라미터화 코드 전달하기](chapter2/동작파라미터화_전달하기.md)
+- [CHAPTER_3) 람다 표현식](chapter3/람다표현식.md)
+
   
 PART2 함수형 데이터처리
+- [CHAPTER_4) 스트림 소개](chapter4/스트림_소개.md) 
 
 PART3 스트림과 람다를 이용한 효과적인 프로그래밍
 
