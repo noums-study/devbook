@@ -20,6 +20,7 @@ PART1 기초
   
 PART2 함수형 데이터처리
 - [CHAPTER_4) 스트림 소개](chapter4/스트림_소개.md) 
+- [CHAPTER_5) 스트림 활용](chapter4/스트림_소개.md) 
 
 PART3 스트림과 람다를 이용한 효과적인 프로그래밍
 
