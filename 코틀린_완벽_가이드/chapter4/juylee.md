@@ -493,3 +493,107 @@ fun main() {
 </br>
 
 싱글턴 클래스의 경우는 주생성자나 부생성자가 없다. 항상 암시적으로 만들어지기 때문에 생성자 호출이 의미가 없기 때문이다. 단, 초기화 블록은 존재할 수 있다.</br>
+또한 싱글턴 클래스 내부에 있는 클래스에는 inner가 붙을 수 없다. inner 클래스의 경우 외부 클래스와 연결이 되는데 외부 클래스가 싱글턴 클래스여서 무조건 내부 클래스에서 사용할 수 있으므로 inner가 불필요해지기 때문이다.</br>
+싱글턴 클래스를 import 해서 사용할 수 있으나 모든 멤버에 대해 * 로 import 하는 것은 불가하다. 이는 객체 정의 안에 다른 클래스 정의와 같이 toString()이나 equals와 같은 공통 메서드 정의가 들어있기 때문이다.</br>
+``` kotlin
+import Application.exit
+
+fun main() {
+  println(Application.name)
+  exit() // Application.exit
+}
+```
+``` kotlin
+import Application.* // error
+```
+</br>
+
+자바에서는 정적 메서드만 모아두는 util 클래스가 종종 존재하지만 코틀린에서는 권장되지 않는 패턴이다. 코틀린에서는 정적 메서드만 모아둔 클래스를 정의하기보다는 객체를 import 하는 식으로 사용하는 것이 좋다. (자바와 동일한 방식의 util 클래스를 정의할 방법은 없음)
+</br>
+</br>
+### 4.4.2 동반 객체
+동반 객체는 companion 키워드가 붙은 object를 의미한다.</br>
+동박 객체는 내포된 객체와 다르게 해당 내포 객체의 이름을 사용하지 않고 동반 객체가 들어 있는 외부 클래스의 이름으로 사용할 수 있다.</br>
+``` kotlin
+class Application private constructor(val name: String) {
+  companion object Factory {
+    fun create(args: Array<String>): Application? {
+      val name = args.firstOrNull()?: return null
+      return Application(name)
+    }
+  }
+}
+```
+``` kotlin
+fun main(args: Array<String>) {
+  val app = Application.create(args)?: return // companion을 안 썼으면 Application.Factory.create(args)로만 호출해야 한다.(companion은 둘다 가능)
+  println("Application started: ${app.name}")
+}
+```
+</br>
+
+동반 객체의 경우 정의에서 이름을 아예 생략할 수 있고 이 방식을 더 권장한다. 이럴 경우 컴파일러는 default name인 Companion으로 가정한다.</br>
+``` kotlin
+class Application private constructor(val name: String) {
+  companion object {
+    ...
+  }
+}
+```
+</br>
+
+단, 동반 객체 멤버를 import 하고 싶을 떄는 객체 이름을 명시해야 한다.</br>
+동반 객체는 한 클래스에서 둘 이상 있을 수 없다.</br>
+``` kotlin
+import Application.Companion.create // OK
+import Application.create // error
+```
+</br>
+
+최상위 객체에 companion을 붙이는 것은 연결할 외부 클래스가 없기 때문에, 객체에 내포된 객체에 companion을 붙이는 것은 불필요한 중복이기 때문에 붙이는 것이 금지된다. </br>
+companion이 자바의 static과 비슷해 보이지만 companion은 인스턴스라는 점에서 차이가 있다. 또한 companion은 다른 타입을 상속할 수 있는 등 유연성이 더 높다.
+</br>
+</br>
+
+### 4.4.3 객체 식
+``` kotlin
+fun main() {
+  fun midPoint(xRange: IntRange, yRange: IntRange) = object { // 반환 값은 정의된 멤버 모두가 들어있는 익명 객체 타입
+    val x = (xRange.first + xRange.last)/2
+    val y = (yRage.first + yRange.last)/2
+  }
+  
+  val midPoint = midPoint(1..5, 2..6)
+  
+  print("${midPoint.x}, ${midPoint.y}) // 3, 4
+}
+```
+</br>
+
+객체 식은 함수 안에는 정의할 수 없다. 왜냐하면 함수는 호출 될 때마다 지역 객체들을 새로 생성해야 되기 때문이다.</br>
+``` kotlin
+fun printMiddle(xRange: IntRange, yRange: IntRange) {
+  // error: name object 'MidPoint' is a singleton and cannot be local. Try to use anonymous object instead
+  object MidPoint {
+    val x = (xRange.first + xRange.last)/2
+    val y = (yRange.first + yRange.last)/2
+  }
+  
+  println("${MidPoint.x}, ${MidPoint.y}")
+}
+```
+
+단, 최상위에 익명 객체를 선언할 경우 익명 객체 안에 있는 멤버에 접근할 때 멤버가 정의되어 있지 않다는 컴파일 오류가 발생한다.</br>
+객체 식은 객체 인스턴스가 생성될 때 바로 초기화 된다. (지연 초기화가 아님)</br>
+``` kotlin
+fun main() {
+  var x = 1
+  
+  val o = object {
+    val a = x++
+  }
+  
+  println("o.a = ${o.a}") // o.a = 1
+  println("x = $x")
+}
+```
