@@ -483,6 +483,7 @@ object Application {
 }
 ```
 </br>
+
 ``` kotlin
 fun describe(app: Application) = app.name // Application type으로 사용
 
@@ -494,7 +495,7 @@ fun main() {
 
 싱글턴 클래스의 경우는 주생성자나 부생성자가 없다. 항상 암시적으로 만들어지기 때문에 생성자 호출이 의미가 없기 때문이다. 단, 초기화 블록은 존재할 수 있다.</br>
 또한 싱글턴 클래스 내부에 있는 클래스에는 inner가 붙을 수 없다. inner 클래스의 경우 외부 클래스와 연결이 되는데 외부 클래스가 싱글턴 클래스여서 무조건 내부 클래스에서 사용할 수 있으므로 inner가 불필요해지기 때문이다.</br>
-싱글턴 클래스를 import 해서 사용할 수 있으나 모든 멤버에 대해 * 로 import 하는 것은 불가하다. 이는 객체 정의 안에 다른 클래스 정의와 같이 toString()이나 equals와 같은 공통 메서드 정의가 들어있기 때문이다.</br>
+싱글턴 클래스를 import 해서 사용할 수 있으나 모든 멤버에 대해 import 하는 것은 불가하다. 이는 객체 정의 안에 다른 클래스 정의와 같이 toString()이나 equals와 같은 공통 메서드 정의가 들어있기 때문이다.</br>
 ``` kotlin
 import Application.exit
 
